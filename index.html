@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini API Chatbot</title>
+    <style>
+        /* Add your custom CSS here */
+        #chatbox {
+            width: 300px;
+            height: 400px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            overflow-y: scroll;
+            margin: 10px;
+        }
+        #userInput {
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <div id="chatbox">
+        <div id="chat"></div>
+    </div>
+    <input type="text" id="userInput" placeholder="Ask something...">
+    <button onclick="sendMessage()">Send</button>
+
+    <script>
+        async function sendMessage() {
+            const userInput = document.getElementById("userInput").value;
+            document.getElementById("chat").innerHTML += "<p>User: " + userInput + "</p>";
+
+            // Send request to your backend (Firebase or Server)
+            const response = await fetch('/api/chat', { 
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: userInput })
+            });
+            const data = await response.json();
+            document.getElementById("chat").innerHTML += "<p>Bot: " + data.reply + "</p>";
+        }
+    </script>
+</body>
+</html>
