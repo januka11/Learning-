@@ -29,7 +29,7 @@
             color: #bdc3c7;
         }
         .container {
-            width: 80%;
+            width: 95%; /* Full width for mobile */
             max-width: 600px;
             margin: 20px auto;
             background: white;
@@ -38,16 +38,16 @@
             overflow: hidden;
         }
         .chatbox {
-            height: 350px; /* Reduced height for better UI */
+            height: 450px; /* Increased height for better usability */
             overflow-y: auto;
             padding: 15px;
             border-bottom: 1px solid #ddd;
         }
         .message {
-            margin: 8px 0; /* Reduced margin for compact look */
+            margin: 8px 0;
             padding: 10px 15px;
             border-radius: 15px;
-            max-width: 75%;
+            max-width: 80%; /* Adjusted for better spacing */
             line-height: 1.5;
             word-wrap: break-word;
             position: relative;
@@ -72,7 +72,7 @@
             background-color: #ecf0f1;
         }
         input[type="text"] {
-            width: 65%; /* Adjusted width for compact look */
+            width: 65%;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 25px;
@@ -83,7 +83,7 @@
             border-color: #3498db;
         }
         button {
-            padding: 8px 15px; /* Reduced padding for compact look */
+            padding: 8px 15px;
             background-color: #3498db;
             color: white;
             border: none;
@@ -240,6 +240,7 @@
         function startNewChat() {
             const chatbox = document.getElementById('chatbox');
             chatbox.innerHTML = ''; // Clear current chat
+            localStorage.removeItem('chatHistory'); // Clear saved history
         }
 
         async function sendMessage(userInput) {
@@ -289,6 +290,15 @@
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${sender}`;
             messageDiv.textContent = text;
+
+            // Dynamically adjust background size based on content length
+            const words = text.split(' ');
+            if (words.length > 20) {
+                messageDiv.style.maxWidth = '100%';
+            } else {
+                messageDiv.style.maxWidth = '80%';
+            }
+
             chatbox.appendChild(messageDiv);
             chatbox.scrollTop = chatbox.scrollHeight; // Auto-scroll to bottom
         }
@@ -443,7 +453,11 @@
         }
 
         // Load chat history when the page loads
-        window.addEventListener('load', loadChatHistory);
+        window.addEventListener('load', () => {
+            // Clear chatbox on refresh
+            const chatbox = document.getElementById('chatbox');
+            chatbox.innerHTML = '';
+        });
     </script>
 </body>
 </html>
