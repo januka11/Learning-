@@ -12,7 +12,8 @@ app.post('/api/chat', async (req, res) => {
     const response = await fetch('https://gemini.googleapis.com/v1/chat', {
         method: 'POST',
         headers: {
-            'Authorization': 'Bearer YOUR_API_KEY', // Gemini API key here
+            'Authorization': 'AIzaSyAHpcLeUAK6huKzM5c1WzAdzzE-BEgoP3M
+', // Gemini API key here
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({ queryInput: { text: { text: userMessage, languageCode: 'en' } } })
