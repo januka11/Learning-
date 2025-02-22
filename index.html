@@ -78,7 +78,7 @@
 
     <script>
         const apiKey = 'AIzaSyAHpcLeUAK6huKzM5c1WzAdzzE-BEgoP3M
-'; // Replace this with your actual Gemini API key
+'; // Replace with your actual Gemini API key
 
         async function sendMessage() {
             const userInput = document.getElementById('userInput').value.trim();
@@ -99,7 +99,7 @@
                 });
 
                 const data = await response.json();
-                appendMessage(data.reply, 'bot');
+                appendMessage(data.reply || 'Sorry, I could not process that.', 'bot');
             } catch (error) {
                 console.error(error);
                 appendMessage('Error communicating with the server.', 'bot');
