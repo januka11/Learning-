@@ -72,13 +72,12 @@
         </div>
         <footer>
             <input type="text" id="userInput" placeholder="Type your message...">
-            <button onclick="sendMessage()">Send</button>
+            <button id="sendButton">Send</button>
         </footer>
     </div>
 
     <script>
-        const apiKey = 'AIzaSyAHpcLeUAK6huKzM5c1WzAdzzE-BEgoP3M
-'; // Replace with your actual Gemini API key
+        const apiKey = 'AIzaSyAHpcLeUAK6huKzM5c1WzAdzzE-BEgoP3M'; // Replace with your actual Gemini API key
 
         async function sendMessage() {
             const userInput = document.getElementById('userInput').value.trim();
@@ -114,6 +113,9 @@
             chatbox.appendChild(messageDiv);
             chatbox.scrollTop = chatbox.scrollHeight; // Auto-scroll to bottom
         }
+
+        // Button click event listener
+        document.getElementById('sendButton').addEventListener('click', sendMessage);
     </script>
 </body>
 </html>
