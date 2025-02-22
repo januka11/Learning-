@@ -24,6 +24,10 @@
         header h1 {
             margin: 0;
         }
+        header p {
+            font-size: 14px;
+            color: #bdc3c7;
+        }
         .container {
             width: 80%;
             max-width: 600px;
@@ -154,11 +158,18 @@
         .history-item:hover {
             background-color: #f4f4f9;
         }
+        .delete-button {
+            float: right;
+            color: red;
+            cursor: pointer;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
     <header>
         <h1>Learning Tool</h1>
+        <p>A smart learning assistant powered by Gemini API. Start chatting to explore!</p>
     </header>
     <div class="container">
         <div class="chatbox" id="chatbox">
@@ -241,6 +252,11 @@
                 const botReply = data.candidates[0].content.parts[0].text || 'Sorry, I could not process that.';
                 appendMessage(botReply, 'bot');
                 saveChatHistory(botReply, 'bot');
+
+                // Check if bot needs clarification
+                if (botReply.toLowerCase().includes("can you clarify")) {
+                    appendMessage("Please provide more details.", 'bot');
+                }
             } catch (error) {
                 console.error(error);
                 const errorMessage = 'Error communicating with the server.';
@@ -287,6 +303,21 @@
                 const historyItem = document.createElement('div');
                 historyItem.className = 'history-item';
                 historyItem.textContent = `${index + 1}: ${item.text.substring(0, 50)}...`;
+
+                // Add delete button for each history item
+                const deleteButton = document.createElement('span');
+                deleteButton.className = 'delete-button';
+                deleteButton.textContent = '❌';
+                deleteButton.addEventListener('click', (e) => {
+                    e.stopPropagation(); // Prevent triggering the history item click
+                    if (confirm('Are you sure you want to delete this chat?')) {
+                        deleteHistory(index);
+                        loadChatHistoryModal(); // Refresh the modal after deletion
+                    }
+                });
+
+                historyItem.appendChild(deleteButton);
+
                 historyItem.addEventListener('click', () => {
                     loadSpecificChat(index);
                     historyModal.style.display = 'none';
@@ -309,6 +340,54 @@
             chatbox.innerHTML = ''; // Clear current chat
 
             history.slice(0, index + 1).forEach(({ text, sender }) => appendMessage(text, sender));
+        }
+
+        // Delete specific chat history
+        function deleteHistory(index) {
+            let history = JSON.parse(localStorage.getItem('chatHistory')) || [];
+            history.splice(index, 1); // Remove the specific chat
+            localStorage.setItem('chatHistory', JSON.stringify(history));
+        }
+
+        // Load chat history modal dynamically
+        function loadChatHistoryModal() {
+            const historyModal = document.getElementById('historyModal');
+            const historyList = document.getElementById('historyList');
+            historyList.innerHTML = ''; // Clear previous history list
+
+            const history = JSON.parse(localStorage.getItem('chatHistory')) || [];
+            if (history.length === 0) {
+                historyList.innerHTML = '<p>No chat history available.</p>';
+                return;
+            }
+
+            history.forEach((item, index) => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                historyItem.textContent = `${index + 1}: ${item.text.substring(0, 50)}...`;
+
+                // Add delete button for each history item
+                const deleteButton = document.createElement('span');
+                deleteButton.className = 'delete-button';
+                deleteButton.textContent = '❌';
+                deleteButton.addEventListener('click', (e) => {
+                    e.stopPropagation(); // Prevent triggering the history item click
+                    if (confirm('Are you sure you want to delete this chat?')) {
+                        deleteHistory(index);
+                        loadChatHistoryModal(); // Refresh the modal after deletion
+                    }
+                });
+
+                historyItem.appendChild(deleteButton);
+
+                historyItem.addEventListener('click', () => {
+                    loadSpecificChat(index);
+                    historyModal.style.display = 'none';
+                });
+                historyList.appendChild(historyItem);
+            });
+
+            historyModal.style.display = 'flex';
         }
 
         // Load chat history when the page loads
