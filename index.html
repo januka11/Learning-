@@ -38,14 +38,14 @@
             overflow: hidden;
         }
         .chatbox {
-            height: 400px;
+            height: 350px; /* Reduced height for better UI */
             overflow-y: auto;
             padding: 15px;
             border-bottom: 1px solid #ddd;
         }
         .message {
-            margin: 10px 0;
-            padding: 12px 15px;
+            margin: 8px 0; /* Reduced margin for compact look */
+            padding: 10px 15px;
             border-radius: 15px;
             max-width: 75%;
             line-height: 1.5;
@@ -72,8 +72,8 @@
             background-color: #ecf0f1;
         }
         input[type="text"] {
-            width: 70%;
-            padding: 12px;
+            width: 65%; /* Adjusted width for compact look */
+            padding: 10px;
             border: 1px solid #ccc;
             border-radius: 25px;
             outline: none;
@@ -83,7 +83,7 @@
             border-color: #3498db;
         }
         button {
-            padding: 10px 20px;
+            padding: 8px 15px; /* Reduced padding for compact look */
             background-color: #3498db;
             color: white;
             border: none;
@@ -369,13 +369,27 @@
             const chatbox = document.getElementById('chatbox');
             chatbox.innerHTML = ''; // Clear current chat
 
-            history.slice(0, index + 1).forEach(({ text, sender }) => appendMessage(text, sender));
+            // Find all messages belonging to the same chat session
+            let currentTopic = history[index]?.text;
+            let sessionMessages = [];
+            for (let i = index; i < history.length; i++) {
+                if (history[i].sender === 'user' && history[i].text !== currentTopic) {
+                    break; // Stop when a new topic starts
+                }
+                sessionMessages.push(history[i]);
+            }
+
+            sessionMessages.forEach(({ text, sender }) => appendMessage(text, sender));
         }
 
         // Delete specific chat history
         function deleteHistory(index) {
             let history = JSON.parse(localStorage.getItem('chatHistory')) || [];
-            history.splice(index, 1); // Remove the specific chat
+            let currentTopic = history[index]?.text;
+
+            // Remove all messages belonging to the same chat session
+            history = history.filter((item, i) => !(i >= index && item.sender === 'user' && item.text === currentTopic));
+
             localStorage.setItem('chatHistory', JSON.stringify(history));
         }
 
