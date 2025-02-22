@@ -443,7 +443,7 @@
             synth.speak(utterance);
         }
 
-        // Clear chatbox on page load but preserve history in localStorage
+        // Clear chatbox UI but preserve chat history in localStorage
         window.addEventListener('load', () => {
             const chatbox = document.getElementById('chatbox');
             chatbox.innerHTML = ''; // Clear chatbox UI
@@ -452,7 +452,6 @@
 
         // Load chat history from localStorage
         function loadChatHistory() {
-            const chatbox = document.getElementById('chatbox');
             const history = JSON.parse(localStorage.getItem('chatHistory')) || [];
             history.forEach(({ text, sender }) => appendMessage(text, sender));
         }
