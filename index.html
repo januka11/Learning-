@@ -38,7 +38,7 @@
             overflow: hidden;
         }
         .chatbox {
-            height: 450px; /* Increased height for better usability */
+            height: 500px; /* Increased height for better usability */
             overflow-y: auto;
             padding: 15px;
             border-bottom: 1px solid #ddd;
@@ -221,14 +221,6 @@
     <script>
         const apiKey = 'AIzaSyAHpcLeUAK6huKzM5c1WzAdzzE-BEgoP3M'; // Replace with your actual Gemini API key
 
-        // Load chat history from localStorage
-        function loadChatHistory() {
-            const chatbox = document.getElementById('chatbox');
-            const history = JSON.parse(localStorage.getItem('chatHistory')) || [];
-            chatbox.innerHTML = ''; // Clear existing messages
-            history.forEach(({ text, sender }) => appendMessage(text, sender));
-        }
-
         // Save chat history to localStorage
         function saveChatHistory(text, sender) {
             const history = JSON.parse(localStorage.getItem('chatHistory')) || [];
@@ -240,7 +232,6 @@
         function startNewChat() {
             const chatbox = document.getElementById('chatbox');
             chatbox.innerHTML = ''; // Clear current chat
-            localStorage.removeItem('chatHistory'); // Clear saved history
         }
 
         async function sendMessage(userInput) {
@@ -452,11 +443,15 @@
             synth.speak(utterance);
         }
 
-        // Load chat history when the page loads
+        // Clear chatbox and localStorage on page refresh
+        window.addEventListener('beforeunload', () => {
+            localStorage.removeItem('chatHistory'); // Clear saved history
+        });
+
+        // Clear chatbox on page load
         window.addEventListener('load', () => {
-            // Clear chatbox on refresh
             const chatbox = document.getElementById('chatbox');
-            chatbox.innerHTML = '';
+            chatbox.innerHTML = ''; // Clear chatbox
         });
     </script>
 </body>
