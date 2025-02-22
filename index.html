@@ -443,16 +443,19 @@
             synth.speak(utterance);
         }
 
-        // Clear chatbox and localStorage on page refresh
-        window.addEventListener('beforeunload', () => {
-            localStorage.removeItem('chatHistory'); // Clear saved history
-        });
-
-        // Clear chatbox on page load
+        // Clear chatbox on page load but preserve history in localStorage
         window.addEventListener('load', () => {
             const chatbox = document.getElementById('chatbox');
-            chatbox.innerHTML = ''; // Clear chatbox
+            chatbox.innerHTML = ''; // Clear chatbox UI
+            loadChatHistory(); // Load saved chat history into localStorage
         });
+
+        // Load chat history from localStorage
+        function loadChatHistory() {
+            const chatbox = document.getElementById('chatbox');
+            const history = JSON.parse(localStorage.getItem('chatHistory')) || [];
+            history.forEach(({ text, sender }) => appendMessage(text, sender));
+        }
     </script>
 </body>
 </html>
